@@ -86,9 +86,11 @@ def reader(fname):
         if ori_sr != SAMPLE_RATE:
             wav = torchaudio.transforms.Resample(ori_sr, SAMPLE_RATE)(wav)
         os.remove(path=tmp_file)
+        turn_id = int(parsed_key['turn_id'])
+        turn_id = turn_id if turn_id == 1 else turn_id // 2 * 2 - 1
         wav_list.append({
             'wav': wav.squeeze(),
-            'key': parsed_key['line_nr'] + '_' + parsed_key['dialog_id'].removesuffix('.json') + '_' + parsed_key['turn_id']
+            'key': parsed_key['dialog_id'].removesuffix('.json') + '_' + str(turn_id)
         })
     hd5_file.close()
     return wav_list
@@ -96,7 +98,7 @@ def reader(fname):
 
 
 
-train_folders = ['tpa', 'tpb', 'tpc', 'tpd']
+train_folders = ['tpa']
 for folder in train_folders:
     print(f'{folder} start')
 
